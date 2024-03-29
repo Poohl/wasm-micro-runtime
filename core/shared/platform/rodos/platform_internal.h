@@ -19,7 +19,7 @@ typedef uint32_t korp_tid;
 
 
 // TODO
-typedef unsigned int korp_mutex;
+typedef uint32_t korp_mutex;
 typedef uint32_t korp_cond;
 typedef uint32_t korp_sem;
 void abort(void);

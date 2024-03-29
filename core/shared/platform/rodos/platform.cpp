@@ -24,8 +24,8 @@ int bh_platform_init(void) {
 
 void bh_platform_destroy(void) {}
 
-void abort() {
-	PRINTF("NOT IMPLEMENTED: abort()\n");
+int* __errno() {
+	return 0;
 }
 
 /**
@@ -88,7 +88,7 @@ korp_tid os_self_thread(void) {
  */
 uint8 *
 os_thread_get_stack_boundary(void) {
-	return NULL;
+	return (uint8*) (RUNNER()->getStackLimitAddr());
 }
 
 /**
@@ -107,24 +107,30 @@ os_thread_jit_write_protect_np(bool enabled);
 int
 os_mutex_init(korp_mutex *mutex) {
 	PRINTF("NOT IMPLEMENTED: os_mutex_init()\n");
+	*mutex = 0;
 	return 0;
 }
 
 int
 os_mutex_destroy(korp_mutex *mutex) {
 	PRINTF("NOT IMPLEMENTED: os_mutex_destroy()\n");
+	*mutex = 1;
 	return 0;
 }
 
 int
 os_mutex_lock(korp_mutex *mutex) {
-	PRINTF("NOT IMPLEMENTED: os_mutex_lock()\n");
+	if (*mutex != 0)
+		PRINTF("FATAL: Deadlock, locking locked mutex\n");
+	*mutex = 1;
 	return 0;
 }
 
 int
 os_mutex_unlock(korp_mutex *mutex) {
-	PRINTF("NOT IMPLEMENTED: os_mutex_unlock()\n");
+	if (*mutex != 1)
+		PRINTF("FATAL: Deadlock, unlocking unlocked mutex\n");
+	*mutex = 0;
 	return 0;
 }
 
